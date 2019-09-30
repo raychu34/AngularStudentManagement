@@ -73,6 +73,8 @@ export class Principal {
                     this.userIdentity = null;
                     this.authenticated = false;
                 }
+                console.log(this.authenticated);
+                console.log(this.userIdentity);
                 this.authenticationState.next(this.userIdentity);
                 return this.userIdentity;
             })
@@ -90,12 +92,12 @@ export class Principal {
 
     // Please realize this method
     isTeacher(): boolean {
-        return false;
+        return this.authenticated && this.userIdentity.login === 'admin';
     }
 
     // Please realize this method
     isStduent(): boolean {
-        return false;
+        return this.authenticated && this.userIdentity.login === 'user';
     }
 
     isIdentityResolved(): boolean {

@@ -56,15 +56,19 @@ public class CourseService {
         return courseRepository.findAllCoursesDto();
     }
 
-    public List<CourseWithTNDto> findAllCoursesDtoWithTeacherNameFromDB(){
-        return courseRepository.findAllCoursesDtoWithTeacherName();
+    public List<CourseWithTNDto> findAllCoursesDtoWithStudentFromDB(){
+        Optional<User> curUser = userService.getUserWithAuthorities();
+
+        return courseRepository.findAllCoursesDtoWithStudent(curUser.get().getId());
+
     }
 
 
     public void registerCourse(String courseName) throws Exception{
         Optional<User> curUser = userService.getUserWithAuthorities();
         Optional<Course> curCourse = courseRepository.findCourseByCourseName(courseName);
-
+        System.out.println(curUser);
+        System.out.println(curCourse);
         if (curUser.isPresent() && curCourse.isPresent()){
             userCourseRepository.save(UserCourse.builder()
                 .user(curUser.get())
@@ -139,7 +143,7 @@ public class CourseService {
 //            .build();
 //
 //        try {
-//            UserCourseRepository.saveAndFlush(t1);
+//            userCourseRepository.saveAndFlush(t1);
 //        } catch (Exception e){
 //            throw new Exception(e.getMessage());
 //        }

@@ -15,7 +15,9 @@ import { CourseWithTNDto } from 'app/shared/model/courseWithTN-dto.model';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
-    classeNameNeedToReg: string;
+    courses: CourseDto[] = [];
+    newCourse: CourseDto = { courseName: null, courseLocation: null, courseContent: null, teacherId: null };
+    coursesWithTN: CourseWithTNDto[] = [];
 
     constructor(
         private principal: Principal,
@@ -23,10 +25,6 @@ export class HomeComponent implements OnInit {
         private eventManager: JhiEventManager,
         private courseService: CourseService
     ) {}
-
-    courses: CourseDto[] = [];
-
-    coursesWithTN: CourseWithTNDto[] = [];
 
     ngOnInit() {
         this.principal.identity().then(account => {
@@ -47,12 +45,19 @@ export class HomeComponent implements OnInit {
         return this.principal.isAuthenticated();
     }
 
+    isTeacher() {
+        return this.principal.isTeacher();
+    }
+
+    isStudent() {
+        return this.principal.isStduent();
+    }
+
     login() {
         this.modalRef = this.loginModalService.open();
     }
 
     getAllCourses() {
-        debugger;
         this.courseService.getCourseInfo().subscribe(curDto => {
             if (!curDto) {
                 this.courses = [];
@@ -72,16 +77,33 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    // registerCourse(courseName) {
-    //
-    // }
-
     clearAllCourses() {
         this.courses = [];
     }
 
-    addCourseToStudent() {
-        const courseName = 'temp';
-        this.courseService.addCourseToStudent(courseName, currentUserCredential);
+    addCourseToStudent(courseName: string) {
+        this.courseService.addCourseToStudent(courseName).subscribe(resp => {
+            console.log(resp);
+        });
+    }
+
+    deleteCourse(courseName: string) {
+        this.courseService.delete(courseName).subscribe(resp => {
+            console.log(resp);
+        });
+    }
+
+    addNewCourse() {
+        console.log(this.newCourse);
+        if (
+            this.newCourse.teacherId !== null &&
+            this.newCourse.courseContent !== null &&
+            this.newCourse.courseLocation !== null &&
+            this.newCourse.courseName !== null
+        ) {
+            this.courseService.add(this.newCourse).subscribe(resp => {
+                console.log(resp);
+            });
+        }
     }
 }

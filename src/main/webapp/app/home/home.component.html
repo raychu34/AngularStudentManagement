@@ -34,13 +34,13 @@
                     <div>{{course.courseLocation}}</div>
                     <div>{{course.courseContent}}</div>
                     <div>{{course.teacherId}}</div>
-                    <button (click)="addCourseToStudent()">注册课程</button>
-                    <button>删除课程</button>
+                    <button *ngIf="isStudent()" (click)="addCourseToStudent(course.courseName)">注册课程</button>
+                    <button *ngIf="isTeacher()" (click)="deleteCourse(course.courseName)">删除课程</button>
                  </div>
             </div>
         </div>
 
-        <div *ngIf="isAuthenticated()">
+        <div *ngIf="isStudent()">
             <hr>
             <span>课程查询</span>
             <hr>
@@ -56,20 +56,20 @@
         </div>
 
         <hr>
-        <div *ngIf="isAuthenticated()">
+        <div *ngIf="isTeacher()">
             <div>
-            <span>课程名称</span><input>
+            <span>课程名称</span><input type="text" [(ngModel)]="newCourse.courseName">
             </div>
             <div>
-                <span>课程地点</span><input>
+                <span>课程地点</span><input type="text" [(ngModel)]="newCourse.courseLocation">
             </div>
             <div>
-                <span>课程内容</span><input>
+                <span>课程内容</span><input type="text" [(ngModel)]="newCourse.courseContent">
             </div>
             <div>
-                <span>课程老师</span><input>
+                <span>课程老师</span><input type="text" [(ngModel)]="newCourse.teacherId">
             </div>
-            <button> 创建 </button>
+            <button (click)="addNewCourse()"> 创建 </button>
         </div>
 
         <!--<div *ngIf="isAuthenticated()">-->

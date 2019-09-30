@@ -3,6 +3,7 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.domain.Course;
 import com.mycompany.myapp.domain.dto.CourseDto;
 import com.mycompany.myapp.domain.dto.CourseWithTNDto;
+import com.mycompany.myapp.domain.UserCourse;
 import com.mycompany.myapp.service.CourseService;
 import io.swagger.annotations.Api;
 import org.hibernate.validator.constraints.NotBlank;
@@ -47,13 +48,13 @@ public class CourseController {
 
     @GetMapping(path = "/api/course/findAllCoursesWithTNDto", produces = "application/json")
     public HttpEntity<List<CourseWithTNDto>> findAllCoursesWithTNDto(){
-        List<CourseWithTNDto> allCourses = courseService.findAllCoursesDtoWithTeacherNameFromDB();
+        List<CourseWithTNDto> allCourses = courseService.findAllCoursesDtoWithStudentFromDB();
 
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/api/course/registerCourse/{courseName}", produces = "application/json")
-    public HttpStatus registerCourse(@PathVariable String courseName) {
+    @PostMapping(path = "/api/course/registerCourse", produces = "application/json")
+    public HttpStatus registerCourse(@RequestBody @NotNull String courseName) {
         try {
             courseService.registerCourse(courseName);
             return HttpStatus.OK;
@@ -92,7 +93,7 @@ public class CourseController {
         }
     }
 
-    @DeleteMapping(path = "/api/course/deleteCourse/{courseName}", produces = "application/js")
+    @DeleteMapping(path = "/api/course/deleteCourse/{courseName}")
     public HttpStatus deleteCourse(@NotNull @PathVariable("courseName") String courseName) {
         try {
             courseService.deleteCourse(courseName);
